@@ -27,17 +27,21 @@ class PokemonService: ObservableObject {
 	}()
 	
 	@Published var currentPokemon: String = ""
-	@Published var pokedexResponse: PokedexResponse?
+	@Published var pokedex: [String]?
 	
 	@MainActor
 	func getPokedex() async {
 		guard let url = URL(string: "\(baseUrl)/generation/\(Int.random(in: 1...9))") else { return }
-		
+
+		// Can remove. Used to demonstrate ProgressView
 		await Task.sleep(2_000_000_000)
 		
 		do {
 			let (data, _) = try await URLSession.shared.data(from: url)
-			pokedexResponse = try jsonDecoder.decode(PokedexResponse.self, from: data)
+			let pokedexResponse = try jsonDecoder.decode(PokedexResponse.self, from: data)
+			
+			pokedex = pokedexResponse.pokemonSpecies?.map { $0.name }
+			
 			changeName()
 		} catch let error {
 			print("Error: \(error.localizedDescription)")
@@ -45,7 +49,6 @@ class PokemonService: ObservableObject {
 	}
 	
 	func changeName() {
-		guard let name = pokedexResponse?.pokemonSpecies?.randomElement()?.name.capitalized else { return }
-		currentPokemon = name
+		currentPokemon = pokedex?.randomElement() ?? ""
 	}
 }
