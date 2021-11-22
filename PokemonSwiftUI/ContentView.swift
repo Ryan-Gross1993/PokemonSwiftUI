@@ -12,23 +12,28 @@ struct ContentView: View {
 	
 	@ViewBuilder
 	var body: some View {
-		if service.currentPokemon.isEmpty {
-			ProgressView("Loading...")
-				.progressViewStyle(.circular)
-			
-				.task {
-					await service.getPokedex()
-				}
-		} else {
-			VStack {
-				Text(service.currentPokemon)
-					.font(.title)
-				Spacer()
-					.frame(height: 100)
-				Button("Click Me!", action: {
-					service.changeName()
-				})
+		VStack {
+			Text(service.currentPokemon)
+				.font(.title)
+			Spacer()
+				.frame(height: 150)
+			Button("Click Me!", action: {
+				service.changeName()
+			})
+		}
+		
+		.opacity(service.currentPokemon.isEmpty ? 0.0 : 1.0)
+		
+		.overlay {
+			if service.currentPokemon.isEmpty {
+				ProgressView("Loading...")
+					.fixedSize(horizontal: false, vertical: false)
+					.progressViewStyle(.circular)
 			}
+		}
+		
+		.task {
+			await service.getPokedex()
 		}
 	}
 }
