@@ -17,7 +17,7 @@ struct PokedexResponse: Codable {
 	var pokemonSpecies: [Pokemon]?
 }
 
-class PokemonService: ObservableObject {
+class PokemonViewModel: ObservableObject {
 	private let baseUrl = "https://pokeapi.co/api/v2/"
 	
 	lazy var jsonDecoder: JSONDecoder = {

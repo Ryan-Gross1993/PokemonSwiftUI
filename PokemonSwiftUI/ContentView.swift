@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ContentView: View {
-	@StateObject var service = PokemonService()
+	@StateObject var service = PokemonViewModel()
 	
 	@ViewBuilder
 	var body: some View {
